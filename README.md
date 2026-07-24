@@ -1,7 +1,11 @@
 # Warfarin PK/PD Portfolio
 
+[![View live report](https://img.shields.io/badge/View-Live%20Report-2C6E9B?style=for-the-badge)](https://019f94c6-630e-cde7-a624-e413f869e4f2.share.connect.posit.cloud/)
+
 A complete, reproducible population pharmacokinetic/pharmacodynamic (PK/PD)
 analysis of warfarin, built in R with **nlmixr2**.
+
+**Live report:** <https://019f94c6-630e-cde7-a624-e413f869e4f2.share.connect.posit.cloud/>
 
 **Goal:** demonstrate a full PK/PD workflow end to end — from raw data to a
 fitted population model, diagnostics, and dosing simulations.

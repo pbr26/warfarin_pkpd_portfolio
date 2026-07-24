@@ -21,6 +21,36 @@ A reproducible population PK/PD analysis of warfarin built in R with
 re-fitting the models.
 :::
 
+## About this analysis {.unnumbered}
+
+**What.** A population pharmacokinetic/pharmacodynamic (PK/PD) model of the
+anticoagulant warfarin, linking dose to plasma concentration to anticoagulant
+effect, with dosing simulations.
+
+**Data.** The `warfarin` dataset from the `nlmixr2data` package (O'Reilly study:
+32 subjects, single oral dose, plasma concentration and prothrombin complex
+activity, with weight/age/sex). Bundled with the software, so fully
+reproducible.
+
+**Methods.** Nonlinear mixed-effects modelling with `nlmixr2` (SAEM). A
+one-compartment first-order-absorption PK model (selected over a two-compartment
+alternative by AIC); an indirect-response *turnover* PD model, chosen because
+the concentration–effect data show hysteresis; a joint PK/PD fit with
+allometric body-weight covariates on clearance and volume; model checking by
+goodness-of-fit, CWRES, and a visual predictive check; and dosing simulations
+via `rxode2`.
+
+**Key results.** Clearance ≈ 0.135 L/h and volume ≈ 7.6 L; estimated weight
+exponents (≈ 0.71 on CL, ≈ 1.05 on V) close to allometric theory; adding weight
+cut unexplained between-subject variability in clearance from ≈ 25% to ≈ 6%.
+
+**Reproduce / learn more.** Run `scripts/01`–`08` in order; see `README.md`,
+the beginner walkthrough in `LEARNING_NOTES.md`, and the full tutorial book in
+`book/`.
+
+*Author: Pramod BR · Effect readout is PCA, not INR · Multi-dose simulations
+are illustrative extrapolations of single-dose data.*
+
 # Objective
 
 Describe the pharmacokinetics of warfarin (how the body absorbs and clears it),
