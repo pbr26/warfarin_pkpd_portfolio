@@ -1,6 +1,9 @@
 # macOS
 .DS_Store
 
+# Large tutorial PDF (kept locally, not pushed to GitHub)
+book/*.pdf
+
 # R
 .Rhistory
 .RData
