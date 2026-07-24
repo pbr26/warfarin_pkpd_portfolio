@@ -1,0 +1,24 @@
+# R
+.Rhistory
+.RData
+.Rproj.user/
+
+# Large fitted model objects (regenerate by running the pipeline)
+models/*.rds
+
+# Working data (regenerate from the package via 01_data_cleaning.R)
+data/raw/*
+data/processed/*
+
+# Quarto build artifacts
+/.quarto/
+analysis_files/
+reports/*.html
+
+# --- Committed on purpose (needed to publish the report) ---
+# figures/*.png        -> kept, the report embeds these
+# reports/results/*.md -> kept, the report includes these
+!figures/
+!figures/*.png
+!reports/results/
+!reports/results/*.md

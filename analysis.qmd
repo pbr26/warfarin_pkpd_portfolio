@@ -1,0 +1,121 @@
+---
+title: "Warfarin Population PK/PD Analysis"
+author: "Pramod BR"
+date: "2026-07-24"
+format:
+  html:
+    theme: cosmo
+    toc: true
+    toc-depth: 2
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    fig-align: center
+    code-tools: false
+---
+
+::: {.callout-note appearance="simple"}
+A reproducible population PK/PD analysis of warfarin built in R with
+**nlmixr2**. Figures and parameter tables are pre-computed by the pipeline
+(`scripts/01`–`08`) and embedded here, so this report renders quickly without
+re-fitting the models.
+:::
+
+# Objective
+
+Describe the pharmacokinetics of warfarin (how the body absorbs and clears it),
+link concentration to its anticoagulant effect — prothrombin complex activity
+(**PCA**) — and use the fitted model to simulate dosing scenarios.
+
+Warfarin is an ideal case study: a narrow therapeutic window, a well-understood
+mechanism (inhibition of clotting-factor synthesis), and a clear *delay*
+between concentration and effect that the model must capture.
+
+# Data
+
+Source: the `warfarin` dataset from **`nlmixr2data`** (O'Reilly study — 32
+subjects, single oral dose, plasma concentration `cp` and effect `pca`, with
+weight, age and sex). It ships with the package, so nothing is downloaded.
+
+# Exploratory analysis
+
+Individual profiles with the population mean ± SD. Concentration rises then
+falls; effect falls then slowly recovers.
+
+::: {layout-ncol=2}
+![Plasma concentration](figures/02_pk_profiles.png)
+
+![Effect (PCA)](figures/02_pd_profiles.png)
+:::
+
+The concentration–effect relationship forms a **loop**, not a single line —
+effect lags concentration. This hysteresis is why the PD model must be a
+delayed, indirect-response (turnover) model rather than a direct one.
+
+![Concentration–effect hysteresis](figures/02_hysteresis.png){width=70%}
+
+![Covariate distributions](figures/02_covariates.png)
+
+# PK model
+
+A one-compartment model with first-order oral absorption was selected over a
+two-compartment alternative (lower AIC). Parameters: absorption rate (`ka`),
+clearance (`CL`) and volume (`V`).
+
+{{< include reports/results/pk_params.md >}}
+
+# PD model
+
+An indirect-response **turnover** model: warfarin inhibits production (`kin`)
+of the clotting-factor pool via an Imax relationship, so PCA declines with a
+delay and recovers as the drug clears.
+
+{{< include reports/results/pd_params.md >}}
+
+# Joint PK/PD model
+
+PK and PD fit simultaneously, with body weight added on clearance and volume.
+The weight exponents came out close to the classic allometric values, and
+between-subject variability on clearance dropped sharply versus the separate
+fits.
+
+{{< include reports/results/pkpd_params.md >}}
+
+# Diagnostics
+
+Goodness-of-fit and residual plots confirm the joint model describes both
+endpoints well.
+
+::: {layout-ncol=2}
+![Observed vs population prediction](figures/06_dv_vs_pred.png)
+
+![CWRES vs time](figures/06_cwres_time.png)
+:::
+
+![Visual predictive check](figures/06_vpc.png){width=80%}
+
+# Simulation
+
+Using the fitted typical-value parameters, we simulate a single 100 mg dose
+(matching the study) and an illustrative 5 mg daily maintenance regimen. The
+shaded band marks an illustrative therapeutic zone.
+
+![Dosing scenarios](figures/07_dosing_scenarios.png)
+
+![Concentration drives effect, with a delay](figures/07_conc_effect.png){width=70%}
+
+{{< include reports/results/time_to_target.md >}}
+
+# Conclusions
+
+This workflow demonstrates an end-to-end population PK/PD analysis: data
+handling, exploratory analysis, structural and covariate model building,
+diagnostics, and simulation. The measured readout is PCA; INR relates to PCA
+clinically but is not measured in this dataset, so it is not reported here. The
+maintenance-dose simulation extrapolates beyond the single-dose data and is
+labelled as illustrative.
+
+::: {.callout-tip appearance="simple"}
+Full method and beginner-friendly explanation: see `LEARNING_NOTES.md`.
+Reproduce everything by running `scripts/01`–`08` in order.
+:::
